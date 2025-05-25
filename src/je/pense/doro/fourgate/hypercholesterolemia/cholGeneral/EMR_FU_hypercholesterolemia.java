@@ -9,7 +9,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class EMR_FU_hypercholesterolemia extends JFrame {
-    private static final String BASE_PATH = EntryDir.homeDir + "/fourgate/hypercholesterolemia/textarea";
+    private static final String BASE_PATH = EntryDir.homeDir + "/fourgate/hypercholesterolemia/cholGeneral/textarea";
     private static final String[] SECTIONS = {
         "CC>", "PI>", "ROS>", "PMH>", "S>", "O>", 
         "Physical Exam>", "A>", "P>", "Comment>"
