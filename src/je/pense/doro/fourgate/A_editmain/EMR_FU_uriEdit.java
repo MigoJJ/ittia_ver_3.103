@@ -7,58 +7,16 @@ import javax.swing.JFrame;
 import javax.swing.SwingWorker;
 
 import je.pense.doro.GDSEMR_frame;
+import je.pense.doro.chartplate.mainpage.EMR_resettextAreas10;
 import je.pense.doro.entry.EntryDir;
 
 public class EMR_FU_uriEdit extends JFrame {
-    private static final int NUM_TEXT_AREAS = 10;
-
+ 
     public EMR_FU_uriEdit() {
-        for (int i = 0; i < NUM_TEXT_AREAS; i++) {
-            if (GDSEMR_frame.textAreas[i] != null) {
-                GDSEMR_frame.textAreas[i].setText("");
-            }
-            String fileName = EntryDir.homeDir + "/fourgate/uri/textarea" + (i);
-            new FileLoader(fileName, i).execute();
-        }
-    }
+    	EMR_resettextAreas10.main("/fourgate/uri");
+    	}
 
-    private class FileLoader extends SwingWorker<String, Void> {
-        private final String fileName;
-        private final int index;
-
-        public FileLoader(String fileName, int index) {
-            this.fileName = fileName;
-            this.index = index;
-        }
-
-        @Override
-        protected String doInBackground() throws Exception {
-            String text = "";
-            try (Scanner scanner = new Scanner(new File(fileName))) {
-                while (scanner.hasNextLine()) {
-                    text += scanner.nextLine() + "\n";
-                }
-            } catch (FileNotFoundException ex) {
-                System.err.println("Failed to read file " + fileName + ": " + ex.getMessage());
-            }
-            return text;
-        }
-
-        @Override
-        protected void done() {
-            try {
-                String text = get();
-                if (GDSEMR_frame.textAreas[index] != null) {
-                    GDSEMR_frame.textAreas[index].setText(text);
-                }
-                System.out.println("Loaded text " + text + " from file " + fileName);
-            } catch (Exception ex) {
-                System.err.println("Failed to load file " + fileName + ": " + ex.getMessage());
-            }
-        }
-    }
-
-    public static void main(String[] args) {
+     public static void main(String[] args) {
         new EMR_FU_uriEdit();
     }
 }
