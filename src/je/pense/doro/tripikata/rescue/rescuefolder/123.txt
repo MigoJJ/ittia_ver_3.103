@@ -1,0 +1,11 @@
+
+  CC>    Diabetes Mellitus  F/U
+  S>
+    Unexpected Weight loss [ - ]
+  A>
+#  DM  F/U   2025.01.30
+  P>
+...Follow-up in the clinic in [ 3.0 ]-month
+...continue with current dosages of meds
+  Comment>
+Get regular eye, foot, and dental checkups.

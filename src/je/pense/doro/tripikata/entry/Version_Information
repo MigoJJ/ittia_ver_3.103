@@ -1,0 +1,63 @@
+
+	--------------------------------------------------------------------
+	      Good Doctors’ Clinic
+	--------------------------------------------------------------------
+	
+	Version         -- V 2.1
+	Made by         -- Jae Joon Koh M.D.
+	
+	Ubuntu------------------------------
+	Description:	Ubuntu 20.04.4 LTS at GDS
+		Codename:	focal
+	Description: Ubuntu 21.10 at Home
+		Codename: impish
+	Description:	Ubuntu 22.04.1 LTS 
+		Codename:	jammy
+		
+	JAVA--------------------------------
+	openjdk version "11.0.16" 2022-07-19
+	OpenJDK Runtime Environment
+		(build 11.0.16+8-post-Ubuntu-0ubuntu120.04)
+	OpenJDK 64-Bit Server VM 
+		(build 11.0.16+8-post-Ubuntu-0ubuntu120.04, mixed mode, sharing)
+	
+	openjdk version "17.0.4" 2022-07-19
+	OpenJDK Runtime Environment 
+		(build 17.0.4+8-Ubuntu-120.04)
+	OpenJDK 64-Bit Server VM 
+		(build 17.0.4+8-Ubuntu-120.04, mixed mode, sharing)
+	
+	java version "17.0.1" 2021-10-19 LTS Oracle
+	Java(TM) SE Runtime Environment 
+		(build 17.0.1+12-LTS-39)
+	Java HotSpot(TM) 64-Bit Server VM 
+		(build 17.0.1+12-LTS-39, mixed mode, sharing)
+		
+	Windows-----------------------------
+	프로세서	Intel(R) Pentium(R) CPU G3240 @ 3.10GHz   
+	3.10 GHz
+	RAM	8.00GB
+	64비트 운영 체제, x64 기반 프로세서
+	Windows 10 Home  버전	21H2
+
+	VMware------------------------------
+	VMware® Workstation 16 Pro Ver. 16.2.2 
+		build-19200509
+	VMware® Workstation 16 Pro
+		16.2.3 build-19376536
+		Windows 10 Pro, 64-bit (Build 19043.1645) 10.0.19043
+	
+	Eclipse-----------------------------
+	Version: 2022-09 (4.25.0)
+		Build id: 20220908-1902
+	Version: 2021-06 (4.20.0)
+		Build id: 20210612-2011
+		OS: Linux, v.5.11.0-36-generic, x86_64 / gtk 3.24.20, 
+		WebKit 2.32.4
+		
+	Excel Binary File Format (.xls) Structure-----------
+		Microsoft Excel 97, Microsoft Excel 2000, 
+		Microsoft Excel 2002, and Microsoft Office Excel 2003.
+	------------------------------------
+	
+	

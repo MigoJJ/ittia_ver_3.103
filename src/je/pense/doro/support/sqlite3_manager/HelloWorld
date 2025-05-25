@@ -1,0 +1,8 @@
+package je.pense.doro.support.sqlite3_manager.abbreviation;
+
+public class HelloWorld {
+
+  public static void main(String[] args) {
+    System.out.println("Hello World~~");
+  }
+}

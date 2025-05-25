@@ -1,0 +1,12 @@
+project
+│
+├── lib
+│   └── sqlite-jdbc.jar
+│
+├── src
+│   ├── DatabaseManager.java
+│   ├── CSVImporter.java
+│   └── KCDViewer.java
+│
+└── resources
+    └── KCD-8DB.csv

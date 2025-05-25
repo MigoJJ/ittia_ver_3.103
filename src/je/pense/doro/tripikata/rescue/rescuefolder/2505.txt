@@ -1,0 +1,10 @@
+
+  CC>   Hypercholesterolemia F/U
+  PI>
+    Chest pain (angina) or heart attack: [denied]
+  P>
+...Follow-up in the clinic in [ 3.0 ]-month
+...now [ well ] treated with current medication
+    continue with current dosages of meds
+  Comment>
+Limit sugary drinks, processed foods, and unhealthy fats.
