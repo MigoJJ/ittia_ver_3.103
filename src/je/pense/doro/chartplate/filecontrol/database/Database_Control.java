@@ -15,8 +15,8 @@ import je.pense.doro.entry.EntryDir;
 public class Database_Control extends JFrame {
     private static final Logger logger = LoggerFactory.getLogger(Database_Control.class);
 
-    private static final String TARGET_DIR = "/home/migowj/문서/ITTIA_EMR_db";
-//    private static final String TARGET_DIR = "/home/dce040b/문서/ITTIA_EMR_db";
+//    private static final String TARGET_DIR = "/home/migowj/문서/ITTIA_EMR_db";
+    private static final String TARGET_DIR = "/home/dce040b/문서/ITTIA_EMR_db";
 //    private static final String TARGET_DIR = EntryDir.currentDir + "/문서/ITTIA_EMR_db";
     private static final String DEST_DIR = EntryDir.homeDir + "/chartplate/filecontrol/database";
     private static final String[] DB_FILE_NAMES = {
