@@ -25,7 +25,6 @@ public class Database_Control extends JFrame {
     	    "javalabtests.db", "icd11.db", "kcd8db.db", "AbbFullDis.db", "LabCodeFullDis.db", "extracteddata.txt"
     	};
 
-
     public Database_Control() {
         setTitle("Database File Control");
         setSize(300, 100);
