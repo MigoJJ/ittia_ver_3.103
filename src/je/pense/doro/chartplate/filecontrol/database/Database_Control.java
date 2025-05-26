@@ -1,11 +1,18 @@
 package je.pense.doro.chartplate.filecontrol.database;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
-import java.nio.file.*;
-import java.util.function.BiFunction;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,13 +112,5 @@ public class Database_Control extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new Database_Control().setVisible(true));
-        
-//        String currentDirectory = System.getProperty("user.dir");
-//        System.out.println("Current working directory: " + currentDirectory);
-
-        // Get user home directory
-//        String userHomeDirectory = System.getProperty("user.home");
-//        System.out.println("User home directory: " + userHomeDirectory);
-
     }
 }
