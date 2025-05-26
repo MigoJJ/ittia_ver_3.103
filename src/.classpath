@@ -6,14 +6,14 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path=""/>
-	<classpathentry kind="lib" path="/home/dce040b/다운로드/Drivers_Sqlite3/OneDrive-2024-07-01/common-csv-weka-package-2024.7.5.jar"/>
-	<classpathentry kind="lib" path="/home/dce040b/다운로드/Drivers_Sqlite3/OneDrive-2024-07-01/log4j-1.2.17.jar"/>
-	<classpathentry kind="lib" path="/home/dce040b/다운로드/Drivers_Sqlite3/OneDrive-2024-07-01/logback-classic-1.2.11.jar"/>
-	<classpathentry kind="lib" path="/home/dce040b/다운로드/Drivers_Sqlite3/OneDrive-2024-07-01/logback-core-1.2.11.jar"/>
-	<classpathentry kind="lib" path="/home/dce040b/다운로드/Drivers_Sqlite3/OneDrive-2024-07-01/logback-core-1.5.18.jar"/>
-	<classpathentry kind="lib" path="/home/dce040b/다운로드/Drivers_Sqlite3/OneDrive-2024-07-01/opencsv-5.10.jar"/>
-	<classpathentry kind="lib" path="/home/dce040b/다운로드/Drivers_Sqlite3/OneDrive-2024-07-01/slf4j-api-1.7.32.jar"/>
-	<classpathentry kind="lib" path="/home/dce040b/다운로드/Drivers_Sqlite3/OneDrive-2024-07-01/slf4j-log4j12-1.7.32.jar"/>
-	<classpathentry kind="lib" path="/home/dce040b/다운로드/Drivers_Sqlite3/OneDrive-2024-07-01/sqlite-jdbc-3.45.1.0.jar"/>
+	<classpathentry kind="lib" path="/home/migowj/문서/jar/commons-csv-1.9.0.jar"/>
+	<classpathentry kind="lib" path="/home/migowj/문서/jar/commons-lang3-3.17.0.jar"/>
+	<classpathentry kind="lib" path="/home/migowj/문서/jar/log4j-1.2.17.jar"/>
+	<classpathentry kind="lib" path="/home/migowj/문서/jar/logback-classic-1.2.11.jar"/>
+	<classpathentry kind="lib" path="/home/migowj/문서/jar/logback-core-1.2.11.jar"/>
+	<classpathentry kind="lib" path="/home/migowj/문서/jar/opencsv-5.10.jar"/>
+	<classpathentry kind="lib" path="/home/migowj/문서/jar/slf4j-api-1.7.32.jar"/>
+	<classpathentry kind="lib" path="/home/migowj/문서/jar/slf4j-log4j12-1.7.32.jar"/>
+	<classpathentry kind="lib" path="/home/migowj/문서/jar/sqlite-jdbc-3.45.1.0.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>

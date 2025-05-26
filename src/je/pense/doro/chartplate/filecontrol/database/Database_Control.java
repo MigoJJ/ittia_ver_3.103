@@ -14,10 +14,12 @@ import je.pense.doro.entry.EntryDir;
 
 public class Database_Control extends JFrame {
     private static final Logger logger = LoggerFactory.getLogger(Database_Control.class);
+    private static final String userHomeDirectory = System.getProperty("user.home");
 
 //    private static final String TARGET_DIR = "/home/migowj/문서/ITTIA_EMR_db";
-    private static final String TARGET_DIR = "/home/dce040b/문서/ITTIA_EMR_db";
-//    private static final String TARGET_DIR = EntryDir.currentDir + "/문서/ITTIA_EMR_db";
+//    private static final String TARGET_DIR = "/home/dce040b/문서/ITTIA_EMR_db";
+    
+    private static final String TARGET_DIR = userHomeDirectory + "/문서/ITTIA_EMR_db";
     private static final String DEST_DIR = EntryDir.homeDir + "/chartplate/filecontrol/database";
     private static final String[] DB_FILE_NAMES = {
     	    "javalabtests.db", "icd11.db", "kcd8db.db", "AbbFullDis.db", "LabCodeFullDis.db", "extracteddata.txt"
@@ -104,5 +106,13 @@ public class Database_Control extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new Database_Control().setVisible(true));
+        
+//        String currentDirectory = System.getProperty("user.dir");
+//        System.out.println("Current working directory: " + currentDirectory);
+
+        // Get user home directory
+//        String userHomeDirectory = System.getProperty("user.home");
+//        System.out.println("User home directory: " + userHomeDirectory);
+
     }
 }
