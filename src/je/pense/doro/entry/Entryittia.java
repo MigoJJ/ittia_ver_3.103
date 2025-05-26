@@ -1,6 +1,6 @@
 package je.pense.doro.entry;
 
-import javax.swing.*;	
+import javax.swing.*;		
 
 import je.pense.doro.GDSEMR_frame;
 
