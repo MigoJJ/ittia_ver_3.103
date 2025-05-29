@@ -33,6 +33,7 @@ import je.pense.doro.samsara.EMR_OBJ_excute.EMR_LpaApoB;
 import je.pense.doro.samsara.EMR_OBJ_excute.EMR_TFT;
 import je.pense.doro.samsara.EMR_OBJ_excute.EMR_TFTout;
 import je.pense.doro.samsara.EMR_OBJ_excute.EMR_eGFR;
+import je.pense.doro.samsara.EMR_clinicallab.Llaboratoyitemslist;
 import je.pense.doro.soap.fu.Followup;
 import je.pense.doro.soap.pmh.EMRPMHAllergy;
 
@@ -110,7 +111,7 @@ public class EMR_top_buttons_obj extends JFrame implements ActionListener {
             EMR_Os_buttons.main(null);
         });
         buttonActions.put("Allergy", () -> EMRPMHAllergy.main(new String[0]));
-        buttonActions.put("Lab", () -> ANPdm.main(new String[0]));
+        buttonActions.put("Lab", () -> Llaboratoyitemslist.main(new String[0]));
         buttonActions.put("Followup", () -> Followup.main(new String[0]));
         buttonActions.put("Medication", () -> emr_select_medication.main(new String[0]));
     }
