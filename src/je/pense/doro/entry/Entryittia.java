@@ -1,6 +1,6 @@
 package je.pense.doro.entry;
 
-import javax.swing.*;
+import javax.swing.*;		
 
 import je.pense.doro.GDSEMR_frame;
 
@@ -74,7 +74,7 @@ public class Entryittia extends JFrame implements ActionListener {
 
     // Open file in editor using Desktop class (cross-platform)
     private void openFileInEditor(String fileName) throws IOException {
-        String filePath = EntryDir.homeDir + "/tripikata/entry/" + fileName;
+        String filePath = EntryDir.homeDir + "/entry/" + fileName;
         File file = new File(filePath);
 
         // Check if Desktop is supported and if the file exists

@@ -1,8 +1,19 @@
 
-  CC>	 Hypercholesterolemia F/U
-  PI>	
-    Chest pain (angina) or heart attack: [denied]
+    A>	Code: A01.2
+ # 파라티푸스 B
+     : Paratyphoid fever B
+  Code: A02.2
+ # 국소적 살모넬라감염
+     : Localized salmonella infections
+  Code: A04
+ # 기타 세균성 장감염
+     : Other bacterial intestinal infections
   P>	
-...Follow-up in the clinic in [ 3.0 ]-month
-...now [ well ] treated with current medication
-    continue with current dosages of meds
+... B1810	HBV infection[ 2025.05.26]
+ ...
+... D126	Colonic polyp 대장 용종[ 2025.05.26]
+... B2001, D1502003	ABO blood type test[ 2025.05.26]
+  Comment>	
+   # 	:  IgG4 Food Antibodies(90종)
+   # 	:  Proinsulin
+   # BZ173	:  AchE(Acetylcholinesterase)
