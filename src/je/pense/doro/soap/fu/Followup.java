@@ -23,9 +23,9 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import je.pense.doro.GDSEMR_frame;
-import je.pense.doro.fourgate.n_laboratorytest.n_laboratoytest;
-import je.pense.doro.fourgate.n_laboratorytest.frequent.JavalabtestsDBManagerGUI;
 import je.pense.doro.fourgate.n_medications.emr_select_medication;
+import je.pense.doro.samsara.EMR_clinicallab.n_laboratoytest;
+import je.pense.doro.samsara.EMR_clinicallab.freauent.JavalabtestsDBManagerGUI;
 
 /**
  * Manages follow-up injections with a GUI for selecting vaccines.

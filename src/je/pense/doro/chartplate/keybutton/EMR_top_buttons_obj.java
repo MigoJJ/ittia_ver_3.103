@@ -70,7 +70,7 @@ public class EMR_top_buttons_obj extends JFrame implements ActionListener {
             "BMI", "BP", "HbA1c", "TFT", "TFTout",
             "LDL", "LFT", "CBC", "eGFR", "Lp(a)",
             "Etc.", "ChestPA", "EKG", "GFS", "CFS",
-            "DEXA", "Allergy", "DM ANP", "Followup", "Medication"
+            "DEXA", "Lab", "Allergy","Followup", "Medication"
         };
 
         for (String buttonName : buttonNames) {
@@ -110,7 +110,7 @@ public class EMR_top_buttons_obj extends JFrame implements ActionListener {
             EMR_Os_buttons.main(null);
         });
         buttonActions.put("Allergy", () -> EMRPMHAllergy.main(new String[0]));
-        buttonActions.put("DM ANP", () -> ANPdm.main(new String[0]));
+        buttonActions.put("Lab", () -> ANPdm.main(new String[0]));
         buttonActions.put("Followup", () -> Followup.main(new String[0]));
         buttonActions.put("Medication", () -> emr_select_medication.main(new String[0]));
     }

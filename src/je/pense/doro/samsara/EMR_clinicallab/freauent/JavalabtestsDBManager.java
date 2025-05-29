@@ -1,4 +1,4 @@
-package je.pense.doro.fourgate.n_laboratorytest.frequent;
+package je.pense.doro.samsara.EMR_clinicallab.freauent;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

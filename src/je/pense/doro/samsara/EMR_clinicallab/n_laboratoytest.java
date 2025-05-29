@@ -1,8 +1,8 @@
-package je.pense.doro.fourgate.n_laboratorytest;
+package je.pense.doro.samsara.EMR_clinicallab;
 
 
 import je.pense.doro.GDSEMR_frame;
-import je.pense.doro.support.sqlite3_manager.labcode.LabCodeMainScreen;
+import je.pense.doro.samsara.EMR_clinicallab.labcode.LabCodeMainScreen;
 
 public class n_laboratoytest {
     

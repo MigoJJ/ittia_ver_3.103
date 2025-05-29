@@ -1,6 +1,6 @@
 package je.pense.doro.chartplate.keybutton;
 
-import java.awt.Toolkit;
+import java.awt.Toolkit;	
 import java.awt.datatransfer.StringSelection;
 
 import javax.swing.JOptionPane;
@@ -21,19 +21,19 @@ import je.pense.doro.fourgate.A_editmain.EMR_FU_uriEdit;
 import je.pense.doro.fourgate.diabetes.EMR_dm_mainentry;
 import je.pense.doro.fourgate.hypercholesterolemia.EMR_chol_mainentry;
 import je.pense.doro.fourgate.hypertension.EMR_htn_mainentry;
-import je.pense.doro.fourgate.n_laboratorytest.frequent.JavalabtestsDBManagerGUI;
 import je.pense.doro.fourgate.n_vaccinations.InjectionApp;
 import je.pense.doro.fourgate.osteoporosis.EMR_DEXA;
 import je.pense.doro.fourgate.osteoporosis.buttons.EMR_Os_buttons;
 import je.pense.doro.fourgate.routinecheck.RoutineCheck;
 import je.pense.doro.fourgate.thyroid.entry.EMR_thyroid_mainentry;
 import je.pense.doro.fourgate.thyroid.pregnancy.EMR_thyroid_Pregnancyentry;
+import je.pense.doro.samsara.EMR_clinicallab.freauent.JavalabtestsDBManagerGUI;
+import je.pense.doro.samsara.EMR_clinicallab.labcode.LabCodeMainScreen;
 import je.pense.doro.soap.assessment.icd_11.ICD11Manager;
 import je.pense.doro.soap.assessment.kcd8.shortdb.KCDShortViewer;
 import je.pense.doro.soap.pmh.EMRPMHAllergy;
 import je.pense.doro.support.EMR_ittia_support;
 import je.pense.doro.support.sqlite3_manager.abbreviation.MainScreen;
-import je.pense.doro.support.sqlite3_manager.labcode.LabCodeMainScreen;
 
 
 /**
