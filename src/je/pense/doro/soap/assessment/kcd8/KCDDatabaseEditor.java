@@ -11,7 +11,7 @@ import je.pense.doro.entry.EntryDir;
 
 public class KCDDatabaseEditor {
 
-    private static final String DB_DIR = EntryDir.homeDir + "/soap/assessment/kcd8";
+    private static final String DB_DIR = EntryDir.HOME_DIR + "/soap/assessment/kcd8";
     private static final String DB_URL = "jdbc:sqlite:" + DB_DIR + "/kcd8db.db";
 
     public void addData(String code, String kDiseaseName, String eDiseaseName) {

@@ -1,83 +1,88 @@
+// File: je/pense/doro/entry/EntryDir.java
+
 package je.pense.doro.entry;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
+import java.util.stream.Stream;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Manages and provides access to essential application directories.
+ * Manages and provides access to essential application directories using the modern Path API.
  * It supports different base paths for 'dev' and 'prod' environments
  * and ensures that all required directories exist on startup.
  */
 public class EntryDir {
     private static final Logger logger = LoggerFactory.getLogger(EntryDir.class);
 
-    // Environment configuration
+    // --- Environment Configuration ---
+    // Determines the runtime environment. Default is 'dev'.
+    // To run in production mode, start the JVM with: -Dapp.env=prod
     private static final String ENV = System.getProperty("app.env", "dev");
     private static final boolean IS_PROD = "prod".equals(ENV);
 
-    // Core application directories
-    public static final String currentDir = System.getProperty("user.dir");
-    public static final String homeDir;
-    public static final String backupDir;
-    public static final String supportDir;
-    public static final String dbDir;
+    // --- CRITICAL: All directory fields are now 'Path' objects ---
+    public static final Path CURRENT_DIR = Paths.get(System.getProperty("user.dir"));
+    public static final Path HOME_DIR;
+    public static final Path BACKUP_DIR;
+    public static final Path SUPPORT_DIR;
+    public static final Path dbDir; // Kept original name for direct compatibility
 
     static {
         // Determine the base path based on the environment
-        String basePath = IS_PROD ? currentDir : Paths.get(currentDir, "src").toString();
+        // In 'prod' mode, paths are relative to the execution directory.
+        // In 'dev' mode, paths are relative to the 'src' folder for IDE compatibility.
+        Path basePath = IS_PROD ? CURRENT_DIR : CURRENT_DIR.resolve("src");
 
-        // Define main directory paths
-        homeDir = buildPath(basePath, "je", "pense", "doro");
-        backupDir = buildPath(homeDir, "tripikata", "rescue");
-        supportDir = buildPath(homeDir, "support", "EMR_support_Folder");
-        dbDir = buildPath(homeDir, "chartplate", "filecontrol", "database");
+        // Define main directory paths using Path.resolve() for clarity and type safety
+        HOME_DIR = basePath.resolve("je/pense/doro");
+        BACKUP_DIR = HOME_DIR.resolve("tripikata/rescue");
+        SUPPORT_DIR = HOME_DIR.resolve("support/EMR_support_Folder");
+        
+        // This is the path required by Database_Control.java
+        dbDir = HOME_DIR.resolve("chartplate/filecontrol/database");
 
         // Ensure all application directories exist at startup
-        Arrays.asList(homeDir, backupDir, supportDir, dbDir)
+        // Using a Stream is a clean way to handle a list of paths.
+        Stream.of(HOME_DIR, BACKUP_DIR, SUPPORT_DIR, dbDir)
               .forEach(EntryDir::ensureDirectoryExists);
     }
 
     /**
-     * Builds a platform-independent path from a base and subsequent parts.
+     * Ensures a directory exists at the given path, creating it and any
+     * parent directories if necessary.
      *
-     * @param base  The starting path.
-     * @param parts The parts to append to the base path.
-     * @return The combined path as a string.
+     * @param directoryPath The Path of the directory to check and create.
      */
-    private static String buildPath(String base, String... parts) {
-        return Paths.get(base, parts).toString();
-    }
-
-    /**
-     * Ensures a directory exists at the given path, creating it if necessary.
-     *
-     * @param directoryPath The path of the directory to check and create.
-     */
-    public static void ensureDirectoryExists(String directoryPath) {
-        Path path = Paths.get(directoryPath);
-        if (!Files.exists(path)) {
+    public static void ensureDirectoryExists(Path directoryPath) {
+        if (Files.notExists(directoryPath)) {
             try {
-                Files.createDirectories(path);
+                Files.createDirectories(directoryPath);
                 logger.info("Created directory: {}", directoryPath);
             } catch (IOException e) {
                 logger.error("Failed to create directory {}: {}", directoryPath, e.getMessage(), e);
             }
         }
     }
+    
+    // Overloaded method for backward compatibility if other parts of your code still use Strings.
+    public static void ensureDirectoryExists(String directoryPath) {
+        ensureDirectoryExists(Paths.get(directoryPath));
+    }
 
     /**
      * Gets the full path for a file within the "Thyroid" support sub-directory.
      *
      * @param fileName The name of the file.
-     * @return The full, platform-independent path to the file.
+     * @return The full, platform-independent Path to the file.
      */
-    public static String getThyroidFilePath(String fileName) {
-        return buildPath(supportDir, "Thyroid", fileName);
+    public static Path getThyroidFilePath(String fileName) {
+        // Now returns a Path object for consistency
+        return SUPPORT_DIR.resolve("Thyroid").resolve(fileName);
     }
 
     /**
@@ -85,12 +90,13 @@ public class EntryDir {
      */
     public static void main(String[] args) {
         System.out.println("--- EntryDir Configuration ---");
-        System.out.println("Environment: " + ENV);
-        System.out.println("Current Dir: " + currentDir);
-        System.out.println("Home Dir:    " + homeDir);
+        System.out.println("Environment: " + ENV + (IS_PROD ? " (Production)" : " (Development)"));
+        System.out.println("Current Dir: " + CURRENT_DIR);
+        System.out.println("Home Dir:    " + HOME_DIR);
         System.out.println("DB Dir:      " + dbDir);
-        System.out.println("Backup Dir:  " + backupDir);
-        System.out.println("Support Dir: " + supportDir);
+        System.out.println("Backup Dir:  " + BACKUP_DIR);
+        System.out.println("Support Dir: " + SUPPORT_DIR);
         System.out.println("----------------------------");
+        System.out.println("Example Thyroid File Path: " + getThyroidFilePath("sample.txt"));
     }
 }

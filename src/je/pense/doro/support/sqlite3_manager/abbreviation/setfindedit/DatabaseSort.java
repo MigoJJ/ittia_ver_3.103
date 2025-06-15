@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import je.pense.doro.entry.EntryDir;
 
 public class DatabaseSort {
-    private static final String DB_URL = "jdbc:sqlite:" + EntryDir.homeDir + "/chartplate/filecontrol/database/AbbFullDis.db";
+    private static final String DB_URL = "jdbc:sqlite:" + EntryDir.HOME_DIR + "/chartplate/filecontrol/database/AbbFullDis.db";
     private static final String TABLE_NAME = "Abbreviations";
     private static final String COLUMN_TO_SORT = "abbreviation";
 

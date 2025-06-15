@@ -30,7 +30,7 @@ import je.pense.doro.fourgate.thyroid.pregnancy.EMR_thyroid_Pregnancyentry;
 import je.pense.doro.samsara.EMR_clinicallab.freauent.JavalabtestsDBManagerGUI;
 import je.pense.doro.samsara.EMR_clinicallab.labcode.LabCodeMainScreen;
 import je.pense.doro.soap.assessment.icd_11.ICD11Manager;
-import je.pense.doro.soap.assessment.kcd8.shortdb.KCDShortViewer;
+import je.pense.doro.soap.assessment.kcd8.KCDViewer;
 import je.pense.doro.soap.pmh.EMRPMHAllergy;
 import je.pense.doro.support.EMR_ittia_support;
 import je.pense.doro.support.sqlite3_manager.abbreviation.MainScreen;
@@ -90,7 +90,7 @@ public class EMR_ButtonEntry extends GDSEMR_frame {
                     ICD11Manager.main(null);
                     break;
                 case "KCD8":
-                	KCDShortViewer.main(null);
+                	KCDViewer.main(null);
                     break;
                 case "Lab code":
                     LabCodeMainScreen.main(null);

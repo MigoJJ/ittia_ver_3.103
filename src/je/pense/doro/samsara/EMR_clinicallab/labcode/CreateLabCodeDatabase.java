@@ -9,7 +9,7 @@ import je.pense.doro.entry.EntryDir;
  */
 public class CreateLabCodeDatabase {
 
-    private static final String DB_URL = "jdbc:sqlite:" + EntryDir.homeDir + "/chartplate/filecontrol/database/LabCodeFullDis.db";
+    private static final String DB_URL = "jdbc:sqlite:" + EntryDir.HOME_DIR + "/chartplate/filecontrol/database/LabCodeFullDis.db";
 
     /**
      * Creates the 'labcodes' table in the database if it doesn't already exist.

@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 public class ICD11Viewer extends JFrame {
     private static final Logger LOGGER = Logger.getLogger(ICD11Viewer.class.getName());
-    private static final String DB_URL = "jdbc:sqlite:" + EntryDir.homeDir + "/chartplate/filecontrol/database/icd11.db";
+    private static final String DB_URL = "jdbc:sqlite:" + EntryDir.HOME_DIR + "/chartplate/filecontrol/database/icd11.db";
     private JTable table;
     private DefaultTableModel tableModel;
     private JTextField searchField;

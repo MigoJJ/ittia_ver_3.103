@@ -41,7 +41,7 @@ public class AbbreviationExpander {
 
 	  public static void main(String args) throws SQLException {
 	    String text = args;
-	    String dbURL = "jdbc:sqlite:" + EntryDir.homeDir + "/chartplate/filecontrol/database/AbbFullDis.db";
+	    String dbURL = "jdbc:sqlite:" + EntryDir.HOME_DIR + "/chartplate/filecontrol/database/AbbFullDis.db";
 	    String expandedText = replaceAbbreviations(text, dbURL);
 	    System.out.println(expandedText); // Output: The meeting is To Be Determined. We expect an estimated time of arrival by noon.
 

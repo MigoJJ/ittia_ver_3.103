@@ -12,7 +12,7 @@ import java.io.*;
 public class FileGeditToCilpboard extends JFrame {
 	
 	public static void FileGeditToCilpboard() {
-        String fileName = EntryDir.backupDir + "/backup";
+        String fileName = EntryDir.BACKUP_DIR + "/backup";
         try {
             Process p = Runtime.getRuntime().exec("gedit " + fileName);
             Timer timer = new Timer(5000, new ActionListener() {

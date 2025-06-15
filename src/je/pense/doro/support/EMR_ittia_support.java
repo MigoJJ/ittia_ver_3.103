@@ -16,7 +16,7 @@ public class EMR_ittia_support {
         openDirectory("EMR_support_Folder" + File.separator + folderName);
     }
     private static void openDirectory(String relativePath) {
-        String directoryPath = EntryDir.homeDir + File.separator + "support" + File.separator + relativePath;
+        String directoryPath = EntryDir.HOME_DIR + File.separator + "support" + File.separator + relativePath;
         File directory = new File(directoryPath);
 
         try {

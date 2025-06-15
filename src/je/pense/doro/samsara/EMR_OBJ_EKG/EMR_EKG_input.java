@@ -174,7 +174,7 @@ public class EMR_EKG_input extends JFrame {
             if (!Desktop.isDesktopSupported()) {
                 throw new IOException("Desktop API unsupported");
             }
-            File file = new File(EntryDir.homeDir + "/samsara/EMR_OBJ_EKG/EKG reference.odt");
+            File file = new File(EntryDir.HOME_DIR + "/samsara/EMR_OBJ_EKG/EKG reference.odt");
             System.out.println("Attempting to open: " + file.getAbsolutePath());
             if (!file.exists()) {
                 throw new IOException("File not found: " + file.getAbsolutePath());

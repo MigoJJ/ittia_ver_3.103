@@ -9,7 +9,7 @@ import java.sql.Statement;
 import je.pense.doro.entry.EntryDir;
 
 public class DatabaseAddStrings {
-    private static String dbURL = "jdbc:sqlite:" + EntryDir.homeDir + "/chartplate/filecontrol/database/AbbFullDis.db";
+    private static String dbURL = "jdbc:sqlite:" + EntryDir.HOME_DIR + "/chartplate/filecontrol/database/AbbFullDis.db";
 
     public static void main(String[] args) {
         // Ensure the table exists

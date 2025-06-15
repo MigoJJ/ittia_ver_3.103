@@ -9,7 +9,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class EMR_FU_hypertension extends JFrame {
-    private static final String BASE_PATH = EntryDir.homeDir + "/fourgate/hypertension/htnGeneral/textarea";
+    private static final String BASE_PATH = EntryDir.HOME_DIR + "/fourgate/hypertension/htnGeneral/textarea";
     private static final String[] SECTIONS = {
         "CC>", "PI>", "ROS>", "PMH>", "S>", "O>", 
         "Physical Exam>", "A>", "P>", "Comment>"

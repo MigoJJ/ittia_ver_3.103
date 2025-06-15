@@ -5,7 +5,7 @@ import java.sql.*;
 import je.pense.doro.entry.EntryDir;
 
 public class DatabaseManager {
-    private static final String DB_DIR = EntryDir.homeDir + "/chartplate/filecontrol/database";
+    private static final String DB_DIR = EntryDir.HOME_DIR + "/chartplate/filecontrol/database";
     private static final String DB_URL = "jdbc:sqlite:" + DB_DIR + "/kcd8db.db";
 
     public DatabaseManager() {
