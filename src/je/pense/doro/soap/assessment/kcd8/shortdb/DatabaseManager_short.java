@@ -1,5 +1,13 @@
-package je.pense.doro.soap.assessment.kcd8.shortdb; // << CHANGED PACKAGE DECLARATION
+package je.pense.doro.soap.assessment.kcd8.shortdb;
 
+import je.pense.doro.entry.EntryDir;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -7,33 +15,39 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import je.pense.doro.entry.EntryDir;
+/**
+ * NOTE on SLF4J Multiple Bindings Warning:
+ * The warning "SLF4J: Class path contains multiple SLF4J bindings" indicates a project
+ * dependency issue, likely in your pom.xml or build.gradle file. You have both
+ * 'logback-classic' and 'slf4j-log4j12' on the classpath. To fix this, you should
+ * choose one logging implementation and exclude the other from your project's dependencies.
+ */
 
 /**
  * Manages a "short" version of the KCD8 database (kcd8db_short.db).
  * This short version contains entries from an original KCD8 database (kcd8db.db)
  * where the classification code length is less than 6 characters.
  * This class handles the creation, population, and querying of this short database.
- * Data modification operations (insert, update, delete) are intentionally disabled
- * for this short database through this manager.
  */
 public class DatabaseManager_short {
 
-    // Note: DB_SUBDIR now reflects the path relative to EntryDir.homeDir,
-    // not directly related to the new package structure of this class itself,
-    // unless EntryDir.homeDir structure is also changing. Assuming it's a fixed data path.
-    private static final String DB_DATA_SUBDIR = "/soap/assessment/kcd8"; // Path for database files
-    private static final String DB_DIR = EntryDir.homeDir + DB_DATA_SUBDIR;
+    private static final Logger logger = LoggerFactory.getLogger(DatabaseManager_short.class);
 
-    // Constants for the "short" database
-    private static final String SHORT_DB_FILENAME = "kcd8db_short.db";
-    private static final String DB_URL_SHORT = "jdbc:sqlite:" + DB_DIR + "/shortdb/" + SHORT_DB_FILENAME;
-    private static final String TABLE_NAME_SHORT = "kcd8db_short";
+    // --- Path and DB Configuration ---
+    // The base directory for all KCD8-related database files.
+    private static final String KCD8_BASE_DIR = Paths.get(EntryDir.homeDir, "soap", "assessment", "kcd8").toString();
 
     // Constants for the original database
     private static final String ORIGINAL_DB_FILENAME = "kcd8db.db";
-    private static final String DB_URL_ORIGINAL = "jdbc:sqlite:" + DB_DIR + "/" + ORIGINAL_DB_FILENAME;
-    private static final String TABLE_NAME_ORIGINAL = "kcd8db"; // Assuming table name in original DB
+    private static final String ORIGINAL_DB_PATH = Paths.get(KCD8_BASE_DIR, ORIGINAL_DB_FILENAME).toString();
+    private static final String TABLE_NAME_ORIGINAL = "kcd8db";
+
+    // Constants for the "short" database
+    private static final String SHORT_DB_DIR = Paths.get(KCD8_BASE_DIR, "shortdb").toString();
+    private static final String SHORT_DB_FILENAME = "kcd8db_short.db";
+    private static final String SHORT_DB_PATH = Paths.get(SHORT_DB_DIR, SHORT_DB_FILENAME).toString();
+    private static final String DB_URL_SHORT = "jdbc:sqlite:" + SHORT_DB_PATH;
+    private static final String TABLE_NAME_SHORT = "kcd8db_short";
 
     // Column Name Constants
     private static final String COLUMN_ID = "id";
@@ -43,8 +57,8 @@ public class DatabaseManager_short {
 
     /**
      * Constructs a DatabaseManager_short instance.
-     * Initializes the short code database by creating its table (if it doesn't exist)
-     * and populating it with data from the original KCD8 database.
+     * Initializes the short code database by ensuring its directory exists,
+     * creating its table (if needed), and populating it from the original KCD8 database.
      */
     public DatabaseManager_short() {
         createShortCodeDatabase();
@@ -52,22 +66,28 @@ public class DatabaseManager_short {
 
     /**
      * Orchestrates the creation and population of the short code database.
-     * Calls methods to create the table and then populate it from the original database.
      */
     private void createShortCodeDatabase() {
+        // **FIX:** Ensure the directory for the short database exists before connecting.
+        try {
+            Files.createDirectories(Paths.get(SHORT_DB_DIR));
+        } catch (IOException e) {
+            logger.error("FATAL: Could not create directory for short database at {}", SHORT_DB_DIR, e);
+            return; // Cannot proceed if directory creation fails.
+        }
+
         createTable();
         populateShortCodeDatabase();
     }
 
     /**
      * Creates the kcd8db_short table in the short database if it does not already exist.
-     * The table stores classification codes, Korean names, and English names.
      */
     private void createTable() {
         String sql = String.format(
                 "CREATE TABLE IF NOT EXISTS %s ("
                 + "%s INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + "%s TEXT UNIQUE,"
+                + "%s TEXT UNIQUE NOT NULL,"
                 + "%s TEXT,"
                 + "%s TEXT"
                 + ");",
@@ -76,23 +96,24 @@ public class DatabaseManager_short {
         try (Connection conn = DriverManager.getConnection(DB_URL_SHORT);
              Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
-            System.out.println("Short code database table ready at " + DB_URL_SHORT);
+            logger.info("Short code database table is ready at {}", DB_URL_SHORT);
         } catch (SQLException e) {
-            System.err.println("Short code table creation error: " + e.getMessage());
+            logger.error("Short code table creation error", e);
         }
     }
 
     /**
-     * Populates the kcd8db_short table with data from the original kcd8db table.
-     * It copies entries where the length of the 'code' is less than 6.
-     * This method uses SQLite's ATTACH DATABASE command to access the original database.
+     * Populates the kcd8db_short table with data from the original kcd8db table
+     * using SQLite's ATTACH DATABASE command. It only copies entries where the
+     * code length is less than 6.
      */
     private void populateShortCodeDatabase() {
-        String originalDbFilePath = DB_DIR + "/" + ORIGINAL_DB_FILENAME;
-        // Basic escaping for path in SQL literal, though often handled by JDBC for standard paths
-        String escapedOriginalDbFilePath = originalDbFilePath.replace("'", "''");
+        if (!Files.exists(Paths.get(ORIGINAL_DB_PATH))) {
+            logger.error("Cannot populate short DB: Original database not found at {}", ORIGINAL_DB_PATH);
+            return;
+        }
 
-        String attachSql = "ATTACH DATABASE '" + escapedOriginalDbFilePath + "' AS original_db;";
+        String attachSql = "ATTACH DATABASE '" + ORIGINAL_DB_PATH.replace("'", "''") + "' AS original_db;";
         String insertSql = String.format(
             "INSERT OR IGNORE INTO %s (%s, %s, %s) " +
             "SELECT %s, %s, %s FROM original_db.%s WHERE LENGTH(%s) < 6;",
@@ -105,179 +126,110 @@ public class DatabaseManager_short {
              Statement stmt = conn.createStatement()) {
 
             stmt.execute(attachSql);
-            System.out.println("Original database ('" + originalDbFilePath + "') attached successfully as 'original_db'.");
+            logger.debug("Attached original database successfully.");
 
             try {
-                stmt.execute(insertSql);
-                System.out.println("'" + TABLE_NAME_SHORT + "' populated successfully from 'original_db." + TABLE_NAME_ORIGINAL + "'.");
+                int rowsAffected = stmt.executeUpdate(insertSql);
+                logger.info("Populated '{}' with {} new rows from 'original_db.{}'.", TABLE_NAME_SHORT, rowsAffected, TABLE_NAME_ORIGINAL);
             } finally {
-                // Ensure DETACH happens even if INSERT fails but ATTACH succeeded
+                // Ensure DETACH happens even if INSERT fails
                 stmt.execute(detachSql);
-                System.out.println("'original_db' detached successfully.");
+                logger.debug("Detached original database successfully.");
             }
         } catch (SQLException e) {
-            System.err.println("Short code database population/attachment error: " + e.getMessage());
-            // For more detailed debugging, consider: e.printStackTrace();
+            logger.error("Short code database population error", e);
         }
     }
 
     /**
      * Retrieves the English name for a given code from the short database.
-     *
-     * @param code The classification code.
-     * @return The English name, or null if not found or an error occurs.
      */
     public String getEnglishNameByCode(String code) {
-        return getEnglishNameByCode(code, DB_URL_SHORT);
-    }
-
-    /**
-     * Retrieves the English name for a given code from a specified database URL.
-     * This method assumes the target database at dbURL has a table named {@value #TABLE_NAME_SHORT}
-     * with the expected schema.
-     *
-     * @param code The classification code.
-     * @param dbURL The JDBC URL of the SQLite database to query.
-     * @return The English name, or null if not found or an error occurs.
-     */
-    public String getEnglishNameByCode(String code, String dbURL) {
-        String sql = String.format("SELECT %s FROM %s WHERE %s = ?", COLUMN_ENGLISH_NAME, TABLE_NAME_SHORT, COLUMN_CODE);
-        try (Connection conn = DriverManager.getConnection(dbURL);
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, code);
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getString(COLUMN_ENGLISH_NAME);
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println("Fetch error for English name of code " + code + ": " + e.getMessage());
-        }
-        return null;
+        return getValueByCode(code, COLUMN_ENGLISH_NAME, DB_URL_SHORT);
     }
 
     /**
      * Retrieves the Korean name for a given code from the short database.
-     *
-     * @param code The classification code.
-     * @return The Korean name, or null if not found or an error occurs.
      */
     public String getKoreanNameByCode(String code) {
-        return getKoreanNameByCode(code, DB_URL_SHORT);
+        return getValueByCode(code, COLUMN_KOREAN_NAME, DB_URL_SHORT);
     }
 
     /**
-     * Retrieves the Korean name for a given code from a specified database URL.
-     * This method assumes the target database at dbURL has a table named {@value #TABLE_NAME_SHORT}
-     * with the expected schema.
+     * Generic helper to retrieve a single string value from a specific column based on a code.
      *
-     * @param code The classification code.
-     * @param dbURL The JDBC URL of the SQLite database to query.
-     * @return The Korean name, or null if not found or an error occurs.
+     * @param code       The classification code to look up.
+     * @param columnName The name of the column to retrieve the value from.
+     * @param dbURL      The JDBC URL of the database to query.
+     * @return The string value, or null if not found or an error occurs.
      */
-    public String getKoreanNameByCode(String code, String dbURL) {
-        String sql = String.format("SELECT %s FROM %s WHERE %s = ?", COLUMN_KOREAN_NAME, TABLE_NAME_SHORT, COLUMN_CODE);
+    private String getValueByCode(String code, String columnName, String dbURL) {
+        String sql = String.format("SELECT %s FROM %s WHERE %s = ?", columnName, TABLE_NAME_SHORT, COLUMN_CODE);
         try (Connection conn = DriverManager.getConnection(dbURL);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, code);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getString(COLUMN_KOREAN_NAME);
+                    return rs.getString(columnName);
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Fetch error for Korean name of code " + code + ": " + e.getMessage());
+            logger.error("Error fetching '{}' for code '{}'", columnName, code, e);
         }
         return null;
     }
 
     /**
      * Checks if a given code exists in the short database.
-     *
-     * @param code The classification code to check.
-     * @return True if the code exists, false otherwise.
      */
     public boolean codeExists(String code) {
         return codeExists(code, DB_URL_SHORT);
     }
 
     /**
-     * Checks if a given code exists in a table named {@value #TABLE_NAME_SHORT}
-     * within the database specified by dbURL.
-     *
-     * @param code The classification code to check.
-     * @param dbURL The JDBC URL of the SQLite database to query.
-     * @return True if the code exists, false otherwise.
+     * Checks if a given code exists in the specified database.
      */
-	public boolean codeExists(String code, String dbURL) {
-        String sql = String.format("SELECT COUNT(*) FROM %s WHERE %s = ?", TABLE_NAME_SHORT, COLUMN_CODE);
+    public boolean codeExists(String code, String dbURL) {
+        String sql = String.format("SELECT 1 FROM %s WHERE %s = ? LIMIT 1", TABLE_NAME_SHORT, COLUMN_CODE);
         try (Connection conn = DriverManager.getConnection(dbURL);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, code);
             try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt(1) > 0;
-                }
+                return rs.next(); // Returns true if a row was found
             }
         } catch (SQLException e) {
-            System.err.println("Check code existence error for code " + code + ": " + e.getMessage());
+            logger.error("Error checking existence for code '{}'", code, e);
         }
         return false;
     }
 
-    /**
-     * This operation is not supported for the short database.
-     * Prints an error message to System.err.
-     */
+    // --- Disabled Operations ---
     public void insertData(String code, String kDiseaseName, String eDiseaseName) {
-		System.err.println("Insert Data (3 params) method not available for short db. Please use original kcd8db manager.");
+        logger.warn("Insert operation is not supported for the read-only short database.");
     }
-
-    /**
-     * This operation is not supported for the short database.
-     * Prints an error message to System.err.
-     */
-    public void insertData(String code, String description) {
-		System.err.println("Insert Data (2 params) method not available for short db. Please use original kcd8db manager.");
-    }
-
-    /**
-     * This operation is not supported for the short database.
-     * Prints an error message to System.err.
-     */
     public void updateData(String code, String kDiseaseName, String eDiseaseName) {
-		System.err.println("Update Data method not available for short db. Please use original kcd8db manager.");
+        logger.warn("Update operation is not supported for the read-only short database.");
     }
-
-    /**
-     * This operation is not supported for the short database.
-     * Prints an error message to System.err.
-     */
     public void deleteData(String code) {
-		System.err.println("Delete Data method not available for short db. Please use original kcd8db manager.");
+        logger.warn("Delete operation is not supported for the read-only short database.");
     }
 
     /**
      * Main method for basic testing or initialization.
-     * Creates an instance of DatabaseManager_short, which triggers the
-     * creation and population of the short database.
-     *
-     * @param args Command line arguments (not used).
      */
     public static void main(String[] args) {
-        // Instantiate the manager to trigger database setup
-        new DatabaseManager_short();
-        System.out.println("DatabaseManager_short initialized. Check console for messages.");
+        logger.info("Initializing DatabaseManager_short...");
+        DatabaseManager_short dbManager = new DatabaseManager_short();
+        logger.info("Initialization complete.");
 
-        // Example usage (optional, for testing):
-        // DatabaseManager_short dbManager = new DatabaseManager_short();
-        // String testCode = "A01"; // Example code that might be short
-        // if (dbManager.codeExists(testCode)) {
-        //     System.out.println("Code " + testCode + " exists.");
-        //     System.out.println("Korean Name: " + dbManager.getKoreanNameByCode(testCode));
-        //     System.out.println("English Name: " + dbManager.getEnglishNameByCode(testCode));
-        // } else {
-        //     System.out.println("Code " + testCode + " does not exist in the short database or an error occurred.");
-        // }
+        // Example usage for testing:
+        String testCode = "A01"; // An example of a short code
+        if (dbManager.codeExists(testCode)) {
+            logger.info("Code {} exists.", testCode);
+            logger.info("  -> Korean Name: {}", dbManager.getKoreanNameByCode(testCode));
+            logger.info("  -> English Name: {}", dbManager.getEnglishNameByCode(testCode));
+        } else {
+            logger.warn("Code {} does not exist in the short database or an error occurred.", testCode);
+        }
     }
 }
