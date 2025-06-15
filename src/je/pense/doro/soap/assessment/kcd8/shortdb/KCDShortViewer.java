@@ -196,7 +196,7 @@ public class KCDShortViewer extends JFrame {
         model.setRowCount(0);
 
         String sql = "SELECT * FROM kcd8db_short WHERE CAST(id AS TEXT) LIKE ? OR code LIKE ? OR korean_name LIKE ? OR english_name LIKE ?";
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:" + EntryDir.homeDir + "/soap/assessment/kcd8/shortdb/kcd8db_short.db");
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:" + EntryDir.homeDir + "/chartplate/filecontrol/database/kcd8db_short.db");
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             String likeQuery = "%" + query + "%";
             pstmt.setString(1, likeQuery);
@@ -222,7 +222,7 @@ public class KCDShortViewer extends JFrame {
     private ResultSet getAllDataFromShortDB() {
         String sql = "SELECT id, code, korean_name, english_name FROM kcd8db_short";
         try {
-            Connection conn = DriverManager.getConnection("jdbc:sqlite:" + EntryDir.homeDir + "/soap/assessment/kcd8/shortdb/kcd8db_short.db");
+            Connection conn = DriverManager.getConnection("jdbc:sqlite:" + EntryDir.homeDir + "/chartplate/filecontrol/database/kcd8db_short.db");
             PreparedStatement pstmt = conn.prepareStatement(sql);
             return pstmt.executeQuery();
         } catch (SQLException e) {

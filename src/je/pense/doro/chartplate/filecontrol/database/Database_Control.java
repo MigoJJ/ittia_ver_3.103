@@ -29,7 +29,7 @@ public class Database_Control extends JFrame {
     private static final String TARGET_DIR = userHomeDirectory + "/문서/ITTIA_EMR_db";
     private static final String DEST_DIR = EntryDir.homeDir + "/chartplate/filecontrol/database";
     private static final String[] DB_FILE_NAMES = {
-    	    "javalabtests.db", "icd11.db", "kcd8db.db", "AbbFullDis.db", "LabCodeFullDis.db", "extracteddata.txt"
+    	    "javalabtests.db", "icd11.db", "kcd8db.db","kcd8db_short.db", "AbbFullDis.db", "LabCodeFullDis.db", "extracteddata.txt"
     	};
 
     public Database_Control() {

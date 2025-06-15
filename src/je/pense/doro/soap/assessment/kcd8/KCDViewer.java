@@ -298,7 +298,7 @@ public class KCDViewer extends JFrame {
         model.setRowCount(0);
 
         String sql = "SELECT * FROM kcd8db WHERE CAST(id AS TEXT) LIKE ? OR code LIKE ? OR korean_name LIKE ? OR english_name LIKE ?";
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:" + EntryDir.homeDir + "/soap/assessment/kcd8/kcd8db.db");
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:" + EntryDir.homeDir + "/chartplate/filecontrol/database/kcd8db.db");
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             String likeQuery = "%" + query + "%";
             pstmt.setString(1, likeQuery);
