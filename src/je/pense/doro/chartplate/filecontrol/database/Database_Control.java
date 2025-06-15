@@ -22,15 +22,15 @@ import je.pense.doro.entry.EntryDir;
 public class Database_Control extends JFrame {
     private static final Logger logger = LoggerFactory.getLogger(Database_Control.class);
     private static final String userHomeDirectory = System.getProperty("user.home");
-
-//    private static final String TARGET_DIR = "/home/migowj/문서/ITTIA_EMR_db";
-//    private static final String TARGET_DIR = "/home/dce040b/문서/ITTIA_EMR_db";
     
     private static final String TARGET_DIR = userHomeDirectory + "/문서/ITTIA_EMR_db";
+    private static final String TARGET_DIR_SUPP = userHomeDirectory + "/문서/Support_directory";
+    private static final String SOURCE_DIR_SUPP = EntryDir.homeDir +"/support/EMR_support_Folder";
     private static final String DEST_DIR = EntryDir.homeDir + "/chartplate/filecontrol/database";
     private static final String[] DB_FILE_NAMES = {
-    	    "javalabtests.db", "icd11.db", "kcd8db.db","kcd8db_short.db", "AbbFullDis.db", "LabCodeFullDis.db", "extracteddata.txt"
-    	};
+        "javalabtests.db", "icd11.db", "kcd8db.db","kcd8db_short.db", 
+        "AbbFullDis.db", "LabCodeFullDis.db", "extracteddata.txt"
+    };
 
     public Database_Control() {
         setTitle("Database File Control");
@@ -51,6 +51,7 @@ public class Database_Control extends JFrame {
         getContentPane().setBackground(Color.LIGHT_GRAY);
 
         EntryDir.createDirectoryIfNotExists(TARGET_DIR);
+        EntryDir.createDirectoryIfNotExists(TARGET_DIR_SUPP);
         EntryDir.createDirectoryIfNotExists(DEST_DIR);
         createFileIfMissing(DEST_DIR + "/extracteddata.txt");
     }
@@ -70,10 +71,10 @@ public class Database_Control extends JFrame {
             boolean copied = false;
             StringBuilder skipped = new StringBuilder();
 
+            // Copy individual database files
             for (String fileName : DB_FILE_NAMES) {
                 Path source = Paths.get(fromDir, fileName);
                 Path target = Paths.get(toDir, fileName);
-
 
                 if (Files.exists(source)) {
                     Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
@@ -85,8 +86,18 @@ public class Database_Control extends JFrame {
                 }
             }
 
+            // Copy the entire EMR_support_Folder
+            boolean dirCopied = copyDirectory(action, SOURCE_DIR_SUPP, TARGET_DIR_SUPP);
+            if (dirCopied) {
+                copied = true;
+                logger.info("{}: Copied directory {} → {}", action, SOURCE_DIR_SUPP, TARGET_DIR_SUPP);
+            } else {
+                logger.warn("{}: Failed to copy directory {} or directory not found", action, SOURCE_DIR_SUPP);
+                skipped.append("Directory: ").append(SOURCE_DIR_SUPP).append("\n");
+            }
+
             if (!copied) {
-                JOptionPane.showMessageDialog(this, "No files found to " + action.toLowerCase() + ".", "Warning", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "No files or directories found to " + action.toLowerCase() + ".", "Warning", JOptionPane.WARNING_MESSAGE);
             } else if (skipped.length() > 0) {
                 JOptionPane.showMessageDialog(this, "Partial success. Missing:\n" + skipped, action + " Result", JOptionPane.WARNING_MESSAGE);
             } else {
@@ -95,6 +106,36 @@ public class Database_Control extends JFrame {
         } catch (IOException ex) {
             logger.error("Error during {}", action, ex);
             JOptionPane.showMessageDialog(this, action + " failed: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private boolean copyDirectory(String action, String sourceDir, String targetDir) throws IOException {
+        Path sourcePath = Paths.get(sourceDir);
+        Path targetPath = Paths.get(targetDir);
+
+        if (!Files.exists(sourcePath)) {
+            return false;
+        }
+
+        Files.createDirectories(targetPath);
+        
+        try (var stream = Files.walk(sourcePath)) {
+            stream.forEach(source -> {
+                try {
+                    Path target = targetPath.resolve(sourcePath.relativize(source));
+                    if (Files.isDirectory(source)) {
+                        Files.createDirectories(target);
+                    } else {
+                        Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
+                    }
+                } catch (IOException e) {
+                    logger.error("{}: Failed to copy {}: {}", action, source, e.getMessage());
+                }
+            });
+            return true;
+        } catch (IOException e) {
+            logger.error("{}: Error walking directory {}: {}", action, sourceDir, e.getMessage());
+            return false;
         }
     }
 
