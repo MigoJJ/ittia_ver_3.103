@@ -1,234 +1,184 @@
 package je.pense.doro.soap.assessment.kcd8.shortdb;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-import javax.swing.table.DefaultTableModel;
-
 import je.pense.doro.GDSEMR_frame;
-import je.pense.doro.entry.EntryDir;
 import je.pense.doro.soap.assessment.kcd8.KCDViewer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.util.List;
+
+/**
+ * A Swing GUI for viewing, searching, and selecting entries from the "short" KCD-8 database.
+ * Delegates all data access operations to DatabaseManager_short.
+ */
 public class KCDShortViewer extends JFrame {
+
+    private static final Logger logger = LoggerFactory.getLogger(KCDShortViewer.class);
+
+    private final DatabaseManager_short dbManager;
     private JTable table;
-    private DatabaseManager_short dbManager;
     private JTextField searchField;
     private JTextArea selectedDataArea;
+    private DefaultTableModel tableModel;
 
     public KCDShortViewer() {
-        dbManager = new DatabaseManager_short();
-        setTitle("KCD-8DB Short Viewer");
-        setSize(1280, 700);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
-
+        this.dbManager = new DatabaseManager_short();
+        setupFrame();
         initUI();
-        loadData();
+        loadAllData();
+    }
+
+    private void setupFrame() {
+        setTitle("KCD-8 Short Code Viewer");
+        setSize(1280, 700);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setLayout(new BorderLayout(10, 10));
     }
 
     private void initUI() {
-        // Center: Table
-        table = new JTable(new DefaultTableModel(new Object[]{"ID", "Code", "Korean Name", "English Name"}, 0));
-        JScrollPane scrollPane = new JScrollPane(table);
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        table.getColumnModel().getColumn(0).setPreferredWidth(50);
-        table.getColumnModel().getColumn(1).setPreferredWidth(100);
-        table.getColumnModel().getColumn(2).setPreferredWidth(350);
-        table.getColumnModel().getColumn(3).setPreferredWidth(450);
+        add(createSearchPanel(), BorderLayout.NORTH);
+        add(createTablePanel(), BorderLayout.CENTER);
+        add(createSelectionPanel(), BorderLayout.EAST);
+        add(createButtonPanel(), BorderLayout.SOUTH);
+    }
 
-        // North: Search Panel
-        JPanel searchPanel = new JPanel();
-        searchField = new JTextField(20);
+    private JPanel createSearchPanel() {
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        searchPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+        searchField = new JTextField(30);
+        searchField.addActionListener(e -> searchData());
+
         JButton searchButton = new JButton("Search");
+        searchButton.addActionListener(e -> searchData());
+
         JButton loadAllButton = new JButton("Load All");
+        loadAllButton.addActionListener(e -> loadAllData());
+
         searchPanel.add(new JLabel("Search:"));
         searchPanel.add(searchField);
         searchPanel.add(searchButton);
         searchPanel.add(loadAllButton);
+        return searchPanel;
+    }
 
-        // East: TextArea for selected data
-        selectedDataArea = new JTextArea(10, 20);
+    private JScrollPane createTablePanel() {
+        String[] columnNames = {"ID", "Code", "Korean Name", "English Name"};
+        tableModel = new DefaultTableModel(columnNames, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        table = new JTable(tableModel);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        table.getColumnModel().getColumn(0).setPreferredWidth(60);
+        table.getColumnModel().getColumn(1).setPreferredWidth(100);
+        table.getColumnModel().getColumn(2).setPreferredWidth(400);
+        table.getColumnModel().getColumn(3).setPreferredWidth(500);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        table.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting() && table.getSelectedRow() != -1) {
+                appendSelectedRowToTextArea();
+            }
+        });
+
+        return new JScrollPane(table);
+    }
+
+    private JScrollPane createSelectionPanel() {
+        selectedDataArea = new JTextArea();
         selectedDataArea.setEditable(true);
-        JScrollPane textAreaScrollPane = new JScrollPane(selectedDataArea);
-        textAreaScrollPane.setPreferredSize(new Dimension(300, 15));
-        textAreaScrollPane.setBorder(BorderFactory.createTitledBorder("Selected Data"));
+        selectedDataArea.setLineWrap(true);
+        selectedDataArea.setWrapStyleWord(true);
 
-        // South: Button Panel
+        JScrollPane textAreaScrollPane = new JScrollPane(selectedDataArea);
+        textAreaScrollPane.setPreferredSize(new Dimension(300, 0));
+        textAreaScrollPane.setBorder(BorderFactory.createTitledBorder("Selected Data for SOAP Note"));
+        return textAreaScrollPane;
+    }
+
+    private JPanel createButtonPanel() {
         JPanel southPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        JButton clearButton = new JButton("Clear");
-        JButton saveButton = new JButton("Save");
-        JButton quitButton = new JButton("Quit");
-        JButton othersButton = new JButton("KCD8 full");
+
+        JButton clearButton = new JButton("Clear Selection");
+        clearButton.addActionListener(e -> selectedDataArea.setText(""));
+
+        JButton saveButton = new JButton("Save to Assessment");
+        saveButton.addActionListener(e -> saveSelectionToEMR());
+
+        JButton openFullViewerButton = new JButton("Open KCD-8 Full Viewer");
+        openFullViewerButton.addActionListener(e -> openFullViewer());
+
+        JButton quitButton = new JButton("Close");
+        quitButton.addActionListener(e -> dispose());
 
         southPanel.add(clearButton);
         southPanel.add(saveButton);
+        southPanel.add(openFullViewerButton);
         southPanel.add(quitButton);
-        southPanel.add(othersButton);
-
-        // Layout
-        setLayout(new BorderLayout());
-        add(searchPanel, BorderLayout.NORTH);
-        add(scrollPane, BorderLayout.CENTER);
-        add(textAreaScrollPane, BorderLayout.EAST);
-        add(southPanel, BorderLayout.SOUTH);
-
-        // Event Listeners
-        searchButton.addActionListener(e -> searchData());
-        loadAllButton.addActionListener(e -> loadData());
-        searchField.addActionListener(e -> searchData());
-
-        // Table row selection listener
-        table.getSelectionModel().addListSelectionListener(e -> {
-            if (!e.getValueIsAdjusting()) {
-                int selectedRow = table.getSelectedRow();
-                if (selectedRow >= 0) {
-                    String code = table.getValueAt(selectedRow, 1).toString();
-                    String koreanName = table.getValueAt(selectedRow, 2).toString();
-                    String englishName = table.getValueAt(selectedRow, 3).toString();
-                    String entry = String.format("Code: %s\n # %s\n   : %s\n\n", code, koreanName, englishName);
-                    selectedDataArea.append(entry);
-                }
-            }
-        });
-
-        // Button Listeners
-        clearButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                selectedDataArea.setText("");
-            }
-        });
-
-        saveButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String textToSave = selectedDataArea.getText();
-                if (textToSave.isEmpty()) {
-                    JOptionPane.showMessageDialog(KCDShortViewer.this,
-                        "No text to save.",
-                        "Warning", JOptionPane.WARNING_MESSAGE);
-                    return;
-                }
-                try {
-                    GDSEMR_frame.setTextAreaText(7, textToSave);
-                    JOptionPane.showMessageDialog(KCDShortViewer.this,
-                        "Text saved to GDSEMR_frame (TextArea 7).",
-                        "Info", JOptionPane.INFORMATION_MESSAGE);
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(KCDShortViewer.this,
-                        "Error saving text: " + ex.getMessage(),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-                    ex.printStackTrace();
-                }
-            }
-        });
-
-        quitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-            }
-        });
-
-        othersButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-//                JOptionPane.showMessageDialog(KCDShortViewer.this,
-//                    "'Others' functionality not implemented yet.",
-//                    "Info", JOptionPane.INFORMATION_MESSAGE);
-            	KCDViewer.main(null);
-            }
-        });
+        return southPanel;
     }
 
-    private void loadData() {
-        DefaultTableModel model = (DefaultTableModel) table.getModel();
-        model.setRowCount(0);
-        ResultSet rs = getAllDataFromShortDB();
-        try {
-            if (rs != null) {
-                while (rs.next()) {
-                    model.addRow(new Object[]{
-                        rs.getInt("id"),
-                        rs.getString("code"),
-                        rs.getString("korean_name"),
-                        rs.getString("english_name")
-                    });
-                }
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Error loading data: " + e.getMessage(),
-                "Database Error", JOptionPane.ERROR_MESSAGE);
-        } finally {
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException e) {
-                    System.err.println("Error closing ResultSet: " + e.getMessage());
-                }
-            }
-        }
+    private void loadAllData() {
+        logger.info("Loading all entries from the short database.");
+        List<DatabaseManager_short.KcdCodeEntry> entries = dbManager.getAllShortCodes();
+        populateTable(entries);
     }
 
     private void searchData() {
         String query = searchField.getText().trim();
-        DefaultTableModel model = (DefaultTableModel) table.getModel();
-        model.setRowCount(0);
+        if (query.isEmpty()) {
+            loadAllData();
+            return;
+        }
+        logger.info("Searching for: '{}'", query);
+        List<DatabaseManager_short.KcdCodeEntry> entries = dbManager.searchShortCodes(query);
+        populateTable(entries);
+    }
 
-        String sql = "SELECT * FROM kcd8db_short WHERE CAST(id AS TEXT) LIKE ? OR code LIKE ? OR korean_name LIKE ? OR english_name LIKE ?";
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:" + EntryDir.homeDir + "/chartplate/filecontrol/database/kcd8db_short.db");
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            String likeQuery = "%" + query + "%";
-            pstmt.setString(1, likeQuery);
-            pstmt.setString(2, likeQuery);
-            pstmt.setString(3, likeQuery);
-            pstmt.setString(4, likeQuery);
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                model.addRow(new Object[]{
-                    rs.getInt("id"),
-                    rs.getString("code"),
-                    rs.getString("korean_name"),
-                    rs.getString("english_name")
-                });
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Error searching data: " + e.getMessage(),
-                "Search Error", JOptionPane.ERROR_MESSAGE);
+    private void populateTable(List<DatabaseManager_short.KcdCodeEntry> entries) {
+        tableModel.setRowCount(0);
+        for (DatabaseManager_short.KcdCodeEntry entry : entries) {
+            tableModel.addRow(new Object[]{
+                    entry.id(),
+                    entry.code(),
+                    entry.koreanName(),
+                    entry.englishName()
+            });
         }
     }
 
+    private void appendSelectedRowToTextArea() {
+        int selectedRow = table.getSelectedRow();
+        String code = tableModel.getValueAt(selectedRow, 1).toString();
+        String koreanName = tableModel.getValueAt(selectedRow, 2).toString();
+        String entry = String.format("#%s (%s)\n", koreanName, code);
+        selectedDataArea.append(entry);
+    }
 
-    private ResultSet getAllDataFromShortDB() {
-        String sql = "SELECT id, code, korean_name, english_name FROM kcd8db_short";
-        try {
-            Connection conn = DriverManager.getConnection("jdbc:sqlite:" + EntryDir.homeDir + "/chartplate/filecontrol/database/kcd8db_short.db");
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            return pstmt.executeQuery();
-        } catch (SQLException e) {
-            System.err.println("Error getting all data: " + e.getMessage());
-            return null;
+    private void saveSelectionToEMR() {
+        String textToSave = selectedDataArea.getText();
+        if (textToSave.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "The selection area is empty.", "Nothing to Save", JOptionPane.WARNING_MESSAGE);
+            return;
         }
+        try {
+            GDSEMR_frame.setTextAreaText(7, textToSave);
+            JOptionPane.showMessageDialog(this, "Selection saved to the Assessment section.", "Save Successful", JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception ex) {
+            logger.error("Failed to save text to GDSEMR_frame", ex);
+            JOptionPane.showMessageDialog(this, "Error saving text: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void openFullViewer() {
+        SwingUtilities.invokeLater(() -> new KCDViewer().setVisible(true));
     }
 
     public static void main(String[] args) {
