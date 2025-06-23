@@ -11,7 +11,7 @@ import je.pense.doro.entry.EntryDir;
  * A utility class to remove rows from the labcodes table where B_code is empty.
  */
 public class CleanEmptyBCodeRows {
-    private static final String DB_URL = "jdbc:sqlite:" + EntryDir.homeDir + "/chartplate/filecontrol/database/LabCodeFullDis.db";
+    private static final String DB_URL = "jdbc:sqlite:" + EntryDir.HOME_DIR + "/chartplate/filecontrol/database/LabCodeFullDis.db";
     private static final String TABLE_NAME = "labcodes"; // Matches the table name in LabDatabaseModel
 
     /**

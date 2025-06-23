@@ -15,7 +15,7 @@ import je.pense.doro.support.sqlite3_manager.abbreviation.setfindedit.DatabaseSo
 public class MainScreen extends JFrame {
     private DefaultTableModel tableModel;
     private JTable table;
-    private static final String DB_URL = "jdbc:sqlite:" + EntryDir.homeDir + "/chartplate/filecontrol/database/AbbFullDis.db";
+    private static final String DB_URL = "jdbc:sqlite:" + EntryDir.HOME_DIR + "/chartplate/filecontrol/database/AbbFullDis.db";
 
     public MainScreen() {
         setupFrame();

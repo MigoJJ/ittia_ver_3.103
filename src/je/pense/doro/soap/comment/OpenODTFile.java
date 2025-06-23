@@ -8,7 +8,7 @@ import je.pense.doro.entry.EntryDir;
 
 public class OpenODTFile {
     public static void main(String[] args) {
-        File file = new File(EntryDir.homeDir + "/soap/comment/retinopathy.odt");
+        File file = new File(EntryDir.HOME_DIR + "/soap/comment/retinopathy.odt");
         try {
             if (Desktop.isDesktopSupported()) {
                 Desktop.getDesktop().open(file);

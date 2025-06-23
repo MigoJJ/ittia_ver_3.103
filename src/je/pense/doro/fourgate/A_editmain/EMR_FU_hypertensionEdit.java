@@ -14,7 +14,7 @@ import je.pense.doro.entry.EntryDir;
  */
 public class EMR_FU_hypertensionEdit extends JFrame {
     private static final int NUM_TEXT_AREAS = 10;
-    private static final String HTN_BASE_PATH = EntryDir.homeDir + "/fourgate/hypertension/htnGeneral/textarea";
+    private static final String HTN_BASE_PATH = EntryDir.HOME_DIR + "/fourgate/hypertension/htnGeneral/textarea";
 
     public EMR_FU_hypertensionEdit() {
         initializeTextAreas();

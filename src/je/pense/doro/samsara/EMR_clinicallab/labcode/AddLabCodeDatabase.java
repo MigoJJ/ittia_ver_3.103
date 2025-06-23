@@ -10,7 +10,7 @@ import je.pense.doro.entry.EntryDir;
  */
 public class AddLabCodeDatabase {
 
-    private static final String DB_URL = "jdbc:sqlite:" + EntryDir.homeDir + "/chartplate/filecontrol/database/LabCodeFullDis.db";
+    private static final String DB_URL = "jdbc:sqlite:" + EntryDir.HOME_DIR + "/chartplate/filecontrol/database/LabCodeFullDis.db";
 
     /**
      * Appends simplified laboratory data to the 'labcodes' table and removes duplicates.

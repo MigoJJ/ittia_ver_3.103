@@ -10,7 +10,7 @@ import je.pense.doro.entry.EntryDir;
 import je.pense.doro.fourgate.osteoporosis.EMR_Osteoporosis_meds;
 
 public class OS_definition extends JFrame {
-    private static final String BASE_PATH = EntryDir.homeDir + "/support/EMR_support_Folder/Osteoporosis/";
+    private static final String BASE_PATH = EntryDir.HOME_DIR + "/support/EMR_support_Folder/Osteoporosis/";
     
     private enum OsOption {
         DEFINITION("Osteoporosis Definition", "OsteoporosisDiagnosis.png", true),

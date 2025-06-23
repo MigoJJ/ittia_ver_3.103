@@ -23,7 +23,7 @@ public class EMR_resettextAreas10 {
                 GDSEMR_frame.textAreas[i].setText(TITLES[i] + "\t");
             }
 
-            String fileName = EntryDir.homeDir + caseFolder + "/textarea" + i;
+            String fileName = EntryDir.HOME_DIR + caseFolder + "/textarea" + i;
             new FileLoader(fileName, i).execute();
         }
     }

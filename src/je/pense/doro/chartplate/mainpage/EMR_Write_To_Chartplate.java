@@ -60,8 +60,8 @@ public class EMR_Write_To_Chartplate extends GDSEMR_frame {
 
     public static void saveTextToFile(JTextArea textArea) {
         String textToSave = textArea.getText();
-        String filePath = EntryDir.homeDir + File.separator + "tripikata" + File.separator + "rescue" + File.separator + "backup";
-        String newFilePath = EntryDir.homeDir + File.separator + "tripikata" + File.separator + "rescue" + File.separator + "backuptemp";
+        String filePath = EntryDir.HOME_DIR + File.separator + "tripikata" + File.separator + "rescue" + File.separator + "backup";
+        String newFilePath = EntryDir.HOME_DIR + File.separator + "tripikata" + File.separator + "rescue" + File.separator + "backuptemp";
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             writer.write(textToSave);

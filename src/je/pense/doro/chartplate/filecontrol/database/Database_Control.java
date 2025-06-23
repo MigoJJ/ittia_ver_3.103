@@ -1,113 +1,143 @@
+// File: je/pense/doro/chartplate/filecontrol/database/Database_Control.java
+
 package je.pense.doro.chartplate.filecontrol.database;
 
-import java.awt.Color;
+import javax.swing.*;
+import je.pense.doro.entry.EntryDir; // This imports the class with the new variable names
+
 import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import je.pense.doro.entry.EntryDir;
+import java.nio.file.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 
 public class Database_Control extends JFrame {
-    private static final Logger logger = LoggerFactory.getLogger(Database_Control.class);
-    private static final String userHomeDirectory = System.getProperty("user.home");
 
-//    private static final String TARGET_DIR = "/home/migowj/문서/ITTIA_EMR_db";
-//    private static final String TARGET_DIR = "/home/dce040b/문서/ITTIA_EMR_db";
-    
-    private static final String TARGET_DIR = userHomeDirectory + "/문서/ITTIA_EMR_db";
-    private static final String DEST_DIR = EntryDir.homeDir + "/chartplate/filecontrol/database";
-    private static final String[] DB_FILE_NAMES = {
-    	    "javalabtests.db", "icd11.db", "kcd8db.db","kcd8db_short.db", "AbbFullDis.db", "LabCodeFullDis.db", "extracteddata.txt"
-    	};
+    private static final Path USER_DOCS_PATH = Paths.get(System.getProperty("user.home"), "Documents");
+    private static final Path BACKUP_DB_DIR = USER_DOCS_PATH.resolve("ITTIA_EMR_db");
+    private static final Path BACKUP_SUPPORT_DIR = USER_DOCS_PATH.resolve("Support_directory");
+
+    private static final List<String> DB_FILES = List.of(
+        "javalabtests.db", "icd11.db", "kcd8db.db",
+        "AbbFullDis.db", "LabCodeFullDis.db", "extracteddata.txt"
+    );
 
     public Database_Control() {
         setTitle("Database File Control");
-        setSize(300, 100);
+        setSize(400, 120);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setLayout(new FlowLayout());
+        setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
 
-        JButton saveButton = new JButton("Save");
-        JButton rescueButton = new JButton("Rescue");
-        JButton quitButton = new JButton("Quit");
+        add(createButton("Backup to Documents", e -> performBackup()));
+        add(createButton("Restore from Documents", e -> performRestore()));
+        add(createButton("Quit", e -> dispose()));
 
-        saveButton.addActionListener(e -> handleCopy("Save", EntryDir.homeDir + "/chartplate/filecontrol/database", TARGET_DIR));
-        rescueButton.addActionListener(this::confirmAndRescue);
-        quitButton.addActionListener(e -> dispose());
-
-        add(saveButton); add(rescueButton); add(quitButton);
-        getContentPane().setBackground(Color.LIGHT_GRAY);
-
-        EntryDir.createDirectoryIfNotExists(TARGET_DIR);
-        EntryDir.createDirectoryIfNotExists(DEST_DIR);
-        createFileIfMissing(DEST_DIR + "/extracteddata.txt");
-    }
-
-    private void confirmAndRescue(ActionEvent e) {
-        int choice = JOptionPane.showConfirmDialog(this,
-            "Rescue will overwrite files in:\n" + DEST_DIR + "\nProceed?",
-            "Confirm Rescue", JOptionPane.YES_NO_OPTION);
-        if (choice == JOptionPane.YES_OPTION) {
-            handleCopy("Rescue", TARGET_DIR, DEST_DIR);
-        }
-    }
-
-    private void handleCopy(String action, String fromDir, String toDir) {
         try {
-            Files.createDirectories(Paths.get(toDir));
-            boolean copied = false;
-            StringBuilder skipped = new StringBuilder();
-
-            for (String fileName : DB_FILE_NAMES) {
-                Path source = Paths.get(fromDir, fileName);
-                Path target = Paths.get(toDir, fileName);
-
-
-                if (Files.exists(source)) {
-                    Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
-                    logger.info("{}: Copied {} → {}", action, source, target);
-                    copied = true;
-                } else {
-                    logger.warn("{}: Missing {}", action, source);
-                    skipped.append(source).append("\n");
-                }
-            }
-
-            if (!copied) {
-                JOptionPane.showMessageDialog(this, "No files found to " + action.toLowerCase() + ".", "Warning", JOptionPane.WARNING_MESSAGE);
-            } else if (skipped.length() > 0) {
-                JOptionPane.showMessageDialog(this, "Partial success. Missing:\n" + skipped, action + " Result", JOptionPane.WARNING_MESSAGE);
-            } else {
-                JOptionPane.showMessageDialog(this, action + " completed successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-            }
-        } catch (IOException ex) {
-            logger.error("Error during {}", action, ex);
-            JOptionPane.showMessageDialog(this, action + " failed: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private void createFileIfMissing(String filePath) {
-        try {
-            Path path = Paths.get(filePath);
-            if (!Files.exists(path)) {
-                Files.createFile(path);
-                logger.info("Created missing file: {}", filePath);
-            }
+            Files.createDirectories(BACKUP_DB_DIR);
+            Files.createDirectories(BACKUP_SUPPORT_DIR);
         } catch (IOException e) {
-            logger.error("Failed to create file {}: {}", filePath, e.getMessage());
+            showError("Initialization Error", "Could not create backup directories:\n" + e.getMessage());
         }
+    }
+
+    private JButton createButton(String text, ActionListener listener) {
+        JButton button = new JButton(text);
+        button.addActionListener(listener);
+        return button;
+    }
+
+    private void performBackup() {
+        List<String> issues = new ArrayList<>();
+        issues.addAll(copyDbFiles(EntryDir.dbDir, BACKUP_DB_DIR));
+        // --- FIX: Changed 'supportDir' to 'SUPPORT_DIR' ---
+        issues.addAll(copyDirectoryRecursive(EntryDir.SUPPORT_DIR, BACKUP_SUPPORT_DIR));
+        showCompletionMessage("Backup", issues);
+    }
+
+    private void performRestore() {
+        int choice = JOptionPane.showConfirmDialog(
+            this,
+            "This will overwrite current application files with the backup.\nAre you sure you want to proceed?",
+            "Confirm Restore",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE
+        );
+
+        if (choice != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        List<String> issues = new ArrayList<>();
+        issues.addAll(copyDbFiles(BACKUP_DB_DIR, EntryDir.dbDir));
+        // --- FIX: Changed 'supportDir' to 'SUPPORT_DIR' ---
+        issues.addAll(copyDirectoryRecursive(BACKUP_SUPPORT_DIR, EntryDir.SUPPORT_DIR));
+        showCompletionMessage("Restore", issues);
+    }
+
+    private List<String> copyDbFiles(Path sourceDir, Path destDir) {
+        List<String> issues = new ArrayList<>();
+        try {
+            Files.createDirectories(destDir);
+        } catch (IOException e) {
+            issues.add("Could not create destination DB dir: " + destDir);
+            return issues;
+        }
+
+        for (String fileName : DB_FILES) {
+            Path sourceFile = sourceDir.resolve(fileName);
+            Path destFile = destDir.resolve(fileName);
+            if (Files.notExists(sourceFile)) {
+                issues.add("Missing source file: " + sourceFile.getFileName());
+                continue;
+            }
+            try {
+                Files.copy(sourceFile, destFile, StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                issues.add("Failed to copy " + fileName + ": " + e.getMessage());
+            }
+        }
+        return issues;
+    }
+
+    private List<String> copyDirectoryRecursive(Path sourceDir, Path destDir) {
+        List<String> issues = new ArrayList<>();
+        if (Files.notExists(sourceDir)) {
+            issues.add("Missing source directory: " + sourceDir);
+            return issues;
+        }
+        try (Stream<Path> stream = Files.walk(sourceDir)) {
+            stream.forEach(sourcePath -> {
+                try {
+                    Path targetPath = destDir.resolve(sourceDir.relativize(sourcePath));
+                    if (Files.isDirectory(sourcePath)) {
+                        Files.createDirectories(targetPath);
+                    } else {
+                        Files.copy(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
+                    }
+                } catch (IOException e) {
+                    issues.add("Failed on: " + sourcePath.getFileName() + " -> " + e.getMessage());
+                }
+            });
+        } catch (IOException e) {
+            issues.add("Could not walk source directory: " + sourceDir);
+        }
+        return issues;
+    }
+
+    private void showCompletionMessage(String action, List<String> issues) {
+        if (issues.isEmpty()) {
+            JOptionPane.showMessageDialog(this, action + " completed successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            String issueDetails = String.join("\n- ", issues);
+            showError(action + " Issues", "The following issues occurred:\n- " + issueDetails);
+        }
+    }
+    
+    private void showError(String title, String message) {
+        JOptionPane.showMessageDialog(this, message, title, JOptionPane.ERROR_MESSAGE);
     }
 
     public static void main(String[] args) {

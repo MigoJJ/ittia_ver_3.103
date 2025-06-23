@@ -9,7 +9,7 @@ import java.io.*;
 import java.nio.file.*;
 
 public class EMR_B_FileListFrame extends JFrame {
-    private static final String DIR_PATH = EntryDir.homeDir + "/tripikata/rescue/rescuefolder";
+    private static final String DIR_PATH = EntryDir.HOME_DIR + "/tripikata/rescue/rescuefolder";
     
     public EMR_B_FileListFrame() {
         setTitle("File List");

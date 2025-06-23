@@ -15,7 +15,7 @@ public class EMR_ChangeString {
     private static final Map<String, String> replacements = new HashMap<>();
 
     static {
-        String filePath = EntryDir.homeDir + "/chartplate/filecontrol/database/extracteddata.txt";
+        String filePath = EntryDir.HOME_DIR + "/chartplate/filecontrol/database/extracteddata.txt";
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = reader.readLine()) != null) {

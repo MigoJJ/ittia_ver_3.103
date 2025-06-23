@@ -49,7 +49,7 @@ public class ICD11Manager extends JFrame implements ActionListener {
 
     private static final Logger LOGGER = Logger.getLogger(ICD11Manager.class.getName());
 //    private static final String DB_URL = "jdbc:sqlite:" + EntryDir.homeDir + "/soap/assessment/icd_11/icd11.db"; // Adjust path if needed
-    private static final String DB_URL = "jdbc:sqlite:" + EntryDir.homeDir + "/chartplate/filecontrol/database/icd11.db"; // Adjust path if needed
+    private static final String DB_URL = "jdbc:sqlite:" + EntryDir.HOME_DIR + "/chartplate/filecontrol/database/icd11.db"; // Adjust path if needed
     private Connection conn;
     
     // UI Components

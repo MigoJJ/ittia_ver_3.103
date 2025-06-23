@@ -22,8 +22,8 @@ import je.pense.doro.entry.EntryDir;
 
 public class ICD11Importer extends JFrame {
     private static final Logger LOGGER = Logger.getLogger(ICD11Importer.class.getName());
-    private static final String DB_URL = "jdbc:sqlite:" +EntryDir.homeDir + "/soap/assessment/icd_11/icd11.db";
-    private static final String CSV_PATH = EntryDir.homeDir + "/soap/assessment/icd_11/icdcodes.csv";
+    private static final String DB_URL = "jdbc:sqlite:" +EntryDir.HOME_DIR + "/soap/assessment/icd_11/icd11.db";
+    private static final String CSV_PATH = EntryDir.HOME_DIR + "/soap/assessment/icd_11/icdcodes.csv";
     private Connection conn;
 
     public ICD11Importer() {

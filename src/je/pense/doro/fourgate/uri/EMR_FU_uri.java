@@ -98,7 +98,7 @@ public class EMR_FU_uri extends JFrame implements ActionListener {
                 JTextArea textArea = textAreas.get(i);
                 try {
                     // Open existing text file and overwrite with new text
-                    String filename = EntryDir.homeDir + "/fourgate/uri/textarea" + i;
+                    String filename = EntryDir.HOME_DIR + "/fourgate/uri/textarea" + i;
                     File file = new File(filename);
                     BufferedWriter writer = new BufferedWriter(new FileWriter(file));
                     writer.write(textArea.getText());
@@ -117,7 +117,7 @@ public class EMR_FU_uri extends JFrame implements ActionListener {
     }
 
 	private static String getSavedText(int index) {
-		String filename = EntryDir.homeDir + "/fourgate/uri/textarea" + index;
+		String filename = EntryDir.HOME_DIR + "/fourgate/uri/textarea" + index;
 		File file = new File(filename);
 	    if (!file.exists()) {
 	        return ""; // Return empty string if file doesn't exist yet

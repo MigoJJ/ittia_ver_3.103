@@ -12,7 +12,7 @@ import je.pense.doro.entry.EntryDir;
 
 public class JavalabtestsDBManager {
 //    private static final String DB_URL = "jdbc:sqlite:" + EntryDir.homeDir + "/fourgate/n_laboratorytest/frequent/javalabtests.db";
-    private static final String DB_URL = "jdbc:sqlite:" + EntryDir.homeDir + "/chartplate/filecontrol/database/javalabtests.db";
+    private static final String DB_URL = "jdbc:sqlite:" + EntryDir.HOME_DIR + "/chartplate/filecontrol/database/javalabtests.db";
 
 
     public static void main(String[] args) {

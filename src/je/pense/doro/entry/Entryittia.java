@@ -74,7 +74,7 @@ public class Entryittia extends JFrame implements ActionListener {
 
     // Open file in editor using Desktop class (cross-platform)
     private void openFileInEditor(String fileName) throws IOException {
-        String filePath = EntryDir.homeDir + "/entry/" + fileName;
+        String filePath = EntryDir.HOME_DIR + "/entry/" + fileName;
         File file = new File(filePath);
 
         // Check if Desktop is supported and if the file exists

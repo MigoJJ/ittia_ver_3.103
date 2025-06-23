@@ -10,7 +10,7 @@ import je.pense.doro.entry.EntryDir;
 
 public class InsertDataToSQLite {
 
-    private static final String DB_URL = "jdbc:sqlite:" + EntryDir.homeDir +"/fourgate/n_laboratorytest/frequent/javalabtests.db";
+    private static final String DB_URL = "jdbc:sqlite:" + EntryDir.HOME_DIR +"/fourgate/n_laboratorytest/frequent/javalabtests.db";
     private static final String[][] TEST_DATA = {
             {"Blood Type", "B2001, D1502003", "ABO blood type test"},
             {"Blood Type", "B2021, D1512003", "Rh type test"},

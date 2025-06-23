@@ -15,7 +15,7 @@ import je.pense.doro.entry.EntryDir;
 
 public class DatabaseExtractStrings {
 
-    private static final String DB_URL = "jdbc:sqlite:" + EntryDir.homeDir + "/chartplate/filecontrol/database/AbbFullDis.db";
+    private static final String DB_URL = "jdbc:sqlite:" + EntryDir.HOME_DIR + "/chartplate/filecontrol/database/AbbFullDis.db";
     private static final String TABLE_NAME = "Abbreviations";
     private static final String COLUMN_TO_SORT = "abbreviation";
 
@@ -32,7 +32,7 @@ public class DatabaseExtractStrings {
     }
 
     private void saveToFile(String[][] data, String filename) throws IOException {
-        String filePath = EntryDir.homeDir + "/chartplate/filecontrol/database/" + filename;
+        String filePath = EntryDir.HOME_DIR + "/chartplate/filecontrol/database/" + filename;
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             for (String[] entry : data) {
                 writer.write("replacements.put(\"" + entry[0] + "\", \"" + entry[1] + "\");\n");

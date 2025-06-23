@@ -16,7 +16,7 @@ public class EMR_B_CopyBackup {
 	    public void saveTextToFile(String patientId) {
 	        try {
 	            String content = GDSEMR_frame.tempOutputArea.getText();
-	            String directoryPath = EntryDir.homeDir + "/tripikata/rescue/rescuefolder/";
+	            String directoryPath = EntryDir.HOME_DIR + "/tripikata/rescue/rescuefolder/";
 	            File directory = new File(directoryPath);
 	            if (!directory.exists()) {
 	                directory.mkdirs();  // Create the directory if it does not exist
@@ -32,7 +32,7 @@ public class EMR_B_CopyBackup {
 	        }
 	    }
 	    public void clearDirectory() {
-	        String directoryPath = EntryDir.homeDir + "/tripikata/rescue/rescuefolder/";
+	        String directoryPath = EntryDir.HOME_DIR + "/tripikata/rescue/rescuefolder/";
 	        File directory = new File(directoryPath);
 	        if (directory.exists()) {
 	            File[] files = directory.listFiles(); // Get all files in the directory
