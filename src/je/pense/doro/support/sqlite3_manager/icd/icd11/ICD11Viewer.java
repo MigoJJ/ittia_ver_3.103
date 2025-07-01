@@ -1,4 +1,4 @@
-package je.pense.doro.soap.assessment.icd_11;
+package je.pense.doro.support.sqlite3_manager.icd.icd11;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;

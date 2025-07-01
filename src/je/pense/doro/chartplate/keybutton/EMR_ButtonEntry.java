@@ -27,11 +27,11 @@ import je.pense.doro.fourgate.osteoporosis.buttons.EMR_Os_buttons;
 import je.pense.doro.fourgate.routinecheck.RoutineCheck;
 import je.pense.doro.fourgate.thyroid.entry.EMR_thyroid_mainentry;
 import je.pense.doro.fourgate.thyroid.pregnancy.EMR_thyroid_Pregnancyentry;
-import je.pense.doro.soap.assessment.icd_11.ICD11Manager;
-import je.pense.doro.soap.assessment.kcd8.KCDViewer;
 import je.pense.doro.soap.pmh.EMRPMHAllergy;
 import je.pense.doro.support.EMR_ittia_support;
 import je.pense.doro.support.sqlite3_manager.abbreviation.MainScreen;
+import je.pense.doro.support.sqlite3_manager.icd.icd11.ICD11Manager;
+import je.pense.doro.support.sqlite3_manager.icd.icd8.KCDViewer;
 import je.pense.doro.support.sqlite3_manager.lab.lablong.LabCodeMainScreen;
 import je.pense.doro.support.sqlite3_manager.lab.labshort.JavalabtestsDBManagerGUI;
 

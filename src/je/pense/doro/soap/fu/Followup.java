@@ -24,7 +24,7 @@ import javax.swing.SwingUtilities;
 
 import je.pense.doro.GDSEMR_frame;
 import je.pense.doro.fourgate.n_medications.emr_select_medication;
-import je.pense.doro.samsara.EMR_clinicallab.n_laboratoytest;
+import je.pense.doro.support.sqlite3_manager.lab.labshort.*;
 import je.pense.doro.support.sqlite3_manager.lab.labshort.JavalabtestsDBManagerGUI;
 
 /**
@@ -115,7 +115,7 @@ public class Followup {
             return;
         }
         else if ("LAB".equals(clickedButtonText)) {
-        	n_laboratoytest.main(null);
+//        	n_laboratoytest.main(null);
             return;
         }
         else if ("LAB other".equals(clickedButtonText)) {

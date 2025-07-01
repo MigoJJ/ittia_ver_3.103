@@ -1,6 +1,6 @@
 package je.pense.doro.chartplate.keybutton;
 
-import java.awt.Color;	
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -13,7 +13,6 @@ import java.util.Map;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
-import je.pense.doro.fourgate.diabetes.dmAutonomic.ANPdm;
 import je.pense.doro.fourgate.n_medications.emr_select_medication;
 import je.pense.doro.fourgate.osteoporosis.EMR_DEXA;
 import je.pense.doro.fourgate.osteoporosis.buttons.EMR_Os_buttons;
@@ -33,9 +32,9 @@ import je.pense.doro.samsara.EMR_OBJ_excute.EMR_LpaApoB;
 import je.pense.doro.samsara.EMR_OBJ_excute.EMR_TFT;
 import je.pense.doro.samsara.EMR_OBJ_excute.EMR_TFTout;
 import je.pense.doro.samsara.EMR_OBJ_excute.EMR_eGFR;
-import je.pense.doro.samsara.EMR_clinicallab.Llaboratoyitemslist;
 import je.pense.doro.soap.fu.Followup;
 import je.pense.doro.soap.pmh.EMRPMHAllergy;
+import je.pense.doro.support.sqlite3_manager.lab.lablong.LabCodeMainScreen;
 
 /**
  * Creates a toolbar with buttons for various EMR functionalities.
@@ -111,7 +110,7 @@ public class EMR_top_buttons_obj extends JFrame implements ActionListener {
             EMR_Os_buttons.main(null);
         });
         buttonActions.put("Allergy", () -> EMRPMHAllergy.main(new String[0]));
-        buttonActions.put("Lab", () -> Llaboratoyitemslist.main(new String[0]));
+        buttonActions.put("Lab", () -> LabCodeMainScreen.main(new String[0]));
         buttonActions.put("Followup", () -> Followup.main(new String[0]));
         buttonActions.put("Medication", () -> emr_select_medication.main(new String[0]));
     }
