@@ -65,6 +65,7 @@ replacements.put(":ftop ", "Hypothyroidism with Pregnancy [ ] weeks F/U");
 replacements.put(":gcag ", "Chronic Atrophic Gastritis");
 replacements.put(":gcon ", "Severe Constipation");
 replacements.put(":gcsg ", "Chronic Superficial Gastritis");
+replacements.put(":gdm ", "gestational diabetes");
 replacements.put(":geg ", "r/o Erosive Gastritis");
 replacements.put(":gg ", "공단검진");
 replacements.put(":ggil ", "Gilbert's syndrome");
