@@ -1,4 +1,4 @@
-package je.pense.doro.samsara.EMR_clinicallab.labcode;
+package je.pense.doro.support.sqlite3_manager.lab.lablong;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;

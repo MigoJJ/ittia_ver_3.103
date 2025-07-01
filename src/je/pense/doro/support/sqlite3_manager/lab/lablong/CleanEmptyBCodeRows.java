@@ -1,4 +1,4 @@
-package je.pense.doro.samsara.EMR_clinicallab.labcode;
+package je.pense.doro.support.sqlite3_manager.lab.lablong;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

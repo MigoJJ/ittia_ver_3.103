@@ -1,4 +1,4 @@
-package je.pense.doro.samsara.EMR_clinicallab.freauent;
+package je.pense.doro.support.sqlite3_manager.lab.labshort;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
