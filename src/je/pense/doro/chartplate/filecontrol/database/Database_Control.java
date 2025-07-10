@@ -20,7 +20,7 @@ public class Database_Control extends JFrame {
     private static final Path BACKUP_SUPPORT_DIR = USER_DOCS_PATH.resolve("Support_directory");
 
     private static final List<String> DB_FILES = List.of(
-        "LabCodeShort.db", "icd11.db", "kcd8db.db",
+        "javalabtests.db", "icd11.db", "kcd8db.db",
         "AbbFullDis.db", "LabCodeFullDis.db", "extracteddata.txt"
     );
 
