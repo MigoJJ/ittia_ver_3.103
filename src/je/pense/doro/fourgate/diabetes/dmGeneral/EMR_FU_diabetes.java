@@ -9,7 +9,9 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class EMR_FU_diabetes extends JFrame {
-    private static final String BASE_PATH = EntryDir.HOME_DIR + "/fourgate/diabetes/dmGeneral/textarea";
+
+//    private static final String BASE_PATH = EntryDir.CURRENT_DIR + "/fourgate/diabetes/dmGeneral/textarea";
+    private static final String BASE_PATH = EntryDir.CURRENT_DIR + "/je/pense/doro/fourgate/diabetes/dmGeneral/textarea";
     private static final String[] SECTION_TITLES = {
         "CC>", "PI>", "ROS>", "PMH>", "S>", "O>", 
         "Physical Exam>", "A>", "P>", "Comment>"
@@ -72,8 +74,12 @@ public class EMR_FU_diabetes extends JFrame {
     }
 
     private String loadText(int index) {
-        File file = new File(BASE_PATH + index);
-        if (!file.exists()) return SECTION_TITLES[index];
+    	    File file = new File(BASE_PATH + index);
+    	    System.out.println("Attempting to load file: " + file.getAbsolutePath());
+    	    if (!file.exists()) {
+    	        System.out.println("File does NOT exist: " + file.getAbsolutePath());
+    	        return SECTION_TITLES[index]; // <--- This is where it happens!
+    	    }
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             StringBuilder content = new StringBuilder();

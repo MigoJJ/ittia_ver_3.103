@@ -32,7 +32,9 @@ public class EMR_thyroid_mainentry {
                 "Hyperthyroidism Symptom",
                 "Hypothyroidism Symptom",
                 "Medications",
-                "Abnormal TFT on Routine check",
+                "Hyperthyroidism  F/U",
+                "Hypothyroidism  F/U",
+                "Abnormal TFT on Routine check  F/U",
                 "Thyroidal nodule",
                 "Post operation F/U PTC",
                 "Quit"
