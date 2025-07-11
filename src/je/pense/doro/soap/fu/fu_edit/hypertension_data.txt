@@ -1,0 +1,11 @@
+Category,Details
+CC>,1
+PI>,2
+ROS>,33
+PMH>,456
+S>,54562
+O>,
+Physical Exam>,
+A>,
+P>,
+Comment>,
